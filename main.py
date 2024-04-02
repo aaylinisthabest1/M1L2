@@ -1,17 +1,30 @@
-import random
+import discord
+from discord.ext import commands
 
-# Символы
-symbols = "+-/*!&$#?=@abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+intents = discord.Intents.default()
+intents.message_content = True
 
-# длина пароля
-password_length = int(input("Введите длину пароля: "))
+bot = commands.Bot(command_prefix='$', intents=intents)
 
-# Переменная пороля
-generated_password = ""
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
 
-# Выходит пароль
-for _ in range(password_length):
-    generated_password += random.choice(symbols)
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Привет! Я бот {bot.user}!')
 
-# Вывод на консоль
-print("Сгенерированный пароль:", generated_password)
+@bot.command()
+async def heh(ctx, count_heh = 5):
+    await ctx.send("he" * count_heh)
+
+@bot.group()
+async def cool(ctx):
+    """Says if a user is cool.
+
+    In reality this just checks if a subcommand is being invoked.
+    """
+    if ctx.invoked_subcommand is None:
+        await ctx.send(f'No, {ctx.subcommand_passed} is not cool')
+        
+bot.run("SECRET CODE")
